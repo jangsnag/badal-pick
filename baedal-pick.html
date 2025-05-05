@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>배달의 가족</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 20px;
+      max-width: 500px;
+      margin: auto;
+      text-align: center;
+    }
+    h1 {
+      font-size: 1.5rem;
+      margin-bottom: 10px;
+    }
+    input[type="text"] {
+      padding: 8px 12px;
+      width: 100%;
+      box-sizing: border-box;
+      margin-bottom: 15px;
+      font-size: 1rem;
+    }
+    .ad-banner {
+      background: #f1f1f1;
+      border: 1px dashed #aaa;
+      color: #555;
+      padding: 20px;
+      margin-bottom: 15px;
+      border-radius: 8px;
+      font-size: 0.95rem;
+    }
+    .categories {
+      display: flex;
+      gap: 10px;
+      overflow-x: auto;
+      white-space: nowrap;
+      padding-bottom: 10px;
+      margin-bottom: 20px;
+      -webkit-overflow-scrolling: touch;
+    }
+    .category-btn {
+      padding: 6px 12px;
+      border-radius: 999px;
+      border: 1px solid #ccc;
+      background: white;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .category-btn.active {
+      background: black;
+      color: white;
+    }
+    .brands {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 30px;
+    }
+    .brand-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .brand-btn {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      border-radius: 12px;
+      border: 1px solid #ddd;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: white;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+    .brand-btn:hover {
+      transform: scale(1.05);
+      border-color: #999;
+    }
+    .brand-btn img {
+      max-width: 60%;
+      max-height: 60%;
+    }
+    .brand-name {
+      margin-top: 6px;
+      font-size: 0.85rem;
+      color: #333;
+      text-align: center;
+    }
+    .star {
+      position: absolute;
+      top: 6px;
+      right: 6px;
+      font-size: 16px;
+      color: gold;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h1>📱 배달픽 </h1>
+
+  <input type="text" id="searchInput" placeholder="브랜드명을 입력하세요..." />
+
+  <div class="ad-banner">
+   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9181451991704883"
+     crossorigin="anonymous"></script>
+  </div>
+
+  <div class="categories" id="categoryList"></div>
+  <div class="brands" id="brandList"></div>
+
+  <script>
+    const data = {
+      "교촌치킨": {
+        logo: "https://upload.wikimedia.org/wikipedia/ko/thumb/2/29/Kyochon_Logo.svg/256px-Kyochon_Logo.svg.png",
+        android: "https://play.google.com/store/apps/details?id=com.order.kyochonchicken&pcampaignid=web_share",
+        ios: "https://apps.apple.com/app/id12345678",
+        web: "https://order.kyochon.com",
+        category: "치킨"
+      },
+      "BHC": {
+        logo: "https://www.bhc.co.kr/images/common/logo.png",
+        android: "https://play.google.com/store/apps/details?id=com.bhc.app",
+        ios: "https://apps.apple.com/app/id87654321",
+        web: "https://www.bhc.co.kr/order",
+        category: "치킨"
+      },
+      "굽네치킨": {
+        logo: "https://goobne.co.kr/resources/images/common/logo.png",
+        android: "https://play.google.com/store/apps/details?id=kr.co.goobne.app",
+        ios: "https://apps.apple.com/app/id23456789",
+        web: "https://order.goobne.co.kr",
+        category: "치킨"
+      },
+      "프라닭": {
+        logo: "https://puradakchicken.com/images/logo.png",
+        android: "https://play.google.com/store/apps/details?id=com.puradak",
+        ios: "https://apps.apple.com/kr/app/id1491707669",
+        web: "https://puradakchicken.com",
+        category: "치킨"
+      },
+      "엽떡": {
+        logo: "https://www.yupdduk.com/images/logo.png",
+        android: "https://play.google.com/store/apps/details?id=com.yupdduk.order",
+        ios: "https://apps.apple.com/kr/app/id1559115507",
+        web: "https://www.yupdduk.com",
+        category: "떡볶이"
+      },
+      "홍콩반점": {
+        logo: "https://www.theborn.co.kr/wp-content/uploads/2020/04/logo_tbj.png",
+        android: "https://play.google.com/store/apps/details?id=kr.co.theborn.hongkongbanjeom",
+        ios: "https://apps.apple.com/kr/app/id1523723860",
+        web: "https://www.theborn.co.kr/tbj",
+        category: "중식"
+      },
+      "베스킨라빈스": {
+        logo: "https://www.baskinrobbins.co.kr/assets/images/common/logo.png",
+        android: "https://play.google.com/store/apps/details?id=com.spc.baskinrobbins",
+        ios: "https://apps.apple.com/kr/app/id1468087489",
+        web: "https://www.baskinrobbins.co.kr",
+        category: "디저트"
+      },
+      "롯데리아": {
+        logo: "https://www.lotteeatz.com/_next/static/media/logo.4f4f4a71.svg",
+        android: "https://play.google.com/store/apps/details?id=kr.co.lotteeatz",
+        ios: "https://apps.apple.com/kr/app/lotte-eatz/id1510268313",
+        web: "https://www.lotteeatz.com",
+        category: "햄버거"
+      },
+      "맥도날드": {
+        logo: "https://mcdonalds.co.kr/kor/images/common/logo.png",
+        android: "https://play.google.com/store/apps/details?id=kr.co.mcdonalds",
+        ios: "https://apps.apple.com/kr/app/mcdonalds/id1114009187",
+        web: "https://www.mcdonalds.co.kr",
+        category: "햄버거"
+      },
+      "도미노피자": {
+        logo: "https://cdn.dominos.co.kr/resources/pc/images/common/logo.png",
+        android: "https://play.google.com/store/apps/details?id=kr.co.dominos.android",
+        ios: "https://apps.apple.com/kr/app/id370107260",
+        web: "https://web.dominos.co.kr",
+        category: "피자"
+      },
+      "이삭토스트": {
+        logo: "https://www.isaac-toast.co.kr/common/images/logo.png",
+        android: "https://play.google.com/store/apps/details?id=kr.co.isaac.toast",
+        ios: "https://apps.apple.com/kr/app/id1668928282",
+        web: "https://www.isaac-toast.co.kr",
+        category: "토스트"
+      }
+    };
+
+    const categories = {
+      "전체": "🍽",
+      "즐겨찾기": "⭐",
+      "치킨": "🍗",
+      "햄버거": "🍔",
+      "피자": "🍕",
+      "토스트": "🍞",
+      "떡볶이": "🌶️",
+      "중식": "🥡",
+      "디저트": "🍨"
+    };
+
+    let favorites = JSON.parse(localStorage.getItem("favorites") || "[]");
+
+    const categoryList = document.getElementById('categoryList');
+    const brandList = document.getElementById('brandList');
+    const searchInput = document.getElementById('searchInput');
+
+    let currentCategory = "전체";
+    let currentSearch = "";
+
+    Object.entries(categories).forEach(([cat, icon]) => {
+      const btn = document.createElement('button');
+      btn.className = 'category-btn';
+      btn.innerText = `${icon} ${cat}`;
+      if (cat === "전체") btn.classList.add("active");
+      btn.onclick = () => {
+        document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentCategory = cat;
+        renderBrands();
+      };
+      categoryList.appendChild(btn);
+    });
+
+    searchInput.addEventListener("input", () => {
+      currentSearch = searchInput.value.trim().toLowerCase();
+      renderBrands();
+    });
+
+    function toggleFavorite(brand) {
+      if (favorites.includes(brand)) {
+        favorites = favorites.filter(b => b !== brand);
+      } else {
+        favorites.push(brand);
+      }
+      localStorage.setItem("favorites", JSON.stringify(favorites));
+      renderBrands();
+    }
+
+    function renderBrands() {
+      brandList.innerHTML = '';
+      let entries = Object.entries(data);
+
+      entries = entries.filter(([brand, info]) => {
+        const isFavorite = favorites.includes(brand);
+        const matchCategory =
+          currentCategory === "전체" ||
+          (currentCategory === "즐겨찾기" && isFavorite) ||
+          info.category === currentCategory;
+        const matchSearch = brand.toLowerCase().includes(currentSearch);
+        return matchCategory && matchSearch;
+      });
+
+      entries.sort(([a], [b]) => {
+        const aFav = favorites.includes(a);
+        const bFav = favorites.includes(b);
+        if (aFav && !bFav) return -1;
+        if (!aFav && bFav) return 1;
+        return a.localeCompare(b);
+      });
+
+      entries.forEach(([brand, info]) => {
+        const wrapper = document.createElement('div');
+        wrapper.className = 'brand-wrapper';
+
+        const btn = document.createElement('div');
+        btn.className = 'brand-btn';
+        btn.innerHTML = `
+          <img src="${info.logo}" alt="${brand} 로고" />
+          <div class="star" onclick="event.stopPropagation(); toggleFavorite('${brand}')">
+            ${favorites.includes(brand) ? '⭐' : '☆'}
+          </div>
+        `;
+        btn.onclick = () => {
+          const popup = window.open('', '_blank', 'width=360,height=500');
+          popup.document.write(`
+            <title>${brand} 주문</title>
+            <style>
+              body { font-family: sans-serif; text-align: center; padding: 20px; }
+              h2 { font-size: 1.2rem; margin-bottom: 20px; }
+              a { display: block; margin: 12px 0; text-decoration: none; color: white; background: #333; padding: 10px; border-radius: 8px; }
+            </style>
+            <h2>${brand} 주문 링크</h2>
+            <a href="${info.android}" target="_blank">📲 Android 앱</a>
+            <a href="${info.ios}" target="_blank">📱 iOS 앱</a>
+            <a href="${info.web}" target="_blank">🌐 웹 주문</a>
+          `);
+        };
+
+        const label = document.createElement('div');
+        label.className = 'brand-name';
+        label.innerText = brand;
+
+        wrapper.appendChild(btn);
+        wrapper.appendChild(label);
+        brandList.appendChild(wrapper);
+      });
+    }
+
+    renderBrands();
+  </script>
+</body>
+</html>
