@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>배달픽</title>
+  <title>배달의 가족</title>
   <style>
     body {
       font-family: sans-serif;
@@ -102,12 +102,12 @@
   </style>
 </head>
 <body>
-  <h1>📱 배달픽 04 </h1>
+  <h1>📱 배달픽 a </h1>
 
   <input type="text" id="searchInput" placeholder="브랜드명을 입력하세요..." />
 
   <div class="ad-banner">
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9181451991704883"
+   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9181451991704883"
      crossorigin="anonymous"></script>
   </div>
 
@@ -118,18 +118,91 @@
     const data = {
       "교촌치킨": {
         logo: "https://upload.wikimedia.org/wikipedia/ko/thumb/2/29/Kyochon_Logo.svg/256px-Kyochon_Logo.svg.png",
-        android: "https://play.google.com/store/apps/details?id=com.order.kyochonchicken",
-        ios: "https://apps.apple.com/app/id12345678",
-        web: "https://order.kyochon.com",
+        android: "https://play.google.com/store/apps/details?id=com.order.kyochonchicken&pcampaignid=web_share",
         category: "치킨"
+      },
+      "BHC": {
+        logo: "https://www.bhc.co.kr/images/common/logo.png",
+        android: "https://play.google.com/store/apps/details?id=com.bhc.app",
+        ios: "https://apps.apple.com/app/id87654321",
+        web: "https://www.bhc.co.kr/order",
+        category: "치킨"
+      },
+      "굽네치킨": {
+        logo: "https://goobne.co.kr/resources/images/common/logo.png",
+        android: "https://play.google.com/store/apps/details?id=kr.co.goobne.app",
+        ios: "https://apps.apple.com/app/id23456789",
+        web: "https://order.goobne.co.kr",
+        category: "치킨"
+      },
+      "프라닭": {
+        logo: "https://puradakchicken.com/images/logo.png",
+        android: "https://play.google.com/store/apps/details?id=com.puradak",
+        ios: "https://apps.apple.com/kr/app/id1491707669",
+        web: "https://puradakchicken.com",
+        category: "치킨"
+      },
+      "엽떡": {
+        logo: "https://www.yupdduk.com/images/logo.png",
+        android: "https://play.google.com/store/apps/details?id=com.yupdduk.order",
+        ios: "https://apps.apple.com/kr/app/id1559115507",
+        web: "https://www.yupdduk.com",
+        category: "떡볶이"
+      },
+      "홍콩반점": {
+        logo: "https://www.theborn.co.kr/wp-content/uploads/2020/04/logo_tbj.png",
+        android: "https://play.google.com/store/apps/details?id=kr.co.theborn.hongkongbanjeom",
+        ios: "https://apps.apple.com/kr/app/id1523723860",
+        web: "https://www.theborn.co.kr/tbj",
+        category: "중식"
+      },
+      "베스킨라빈스": {
+        logo: "https://www.baskinrobbins.co.kr/assets/images/common/logo.png",
+        android: "https://play.google.com/store/apps/details?id=com.spc.baskinrobbins",
+        ios: "https://apps.apple.com/kr/app/id1468087489",
+        web: "https://www.baskinrobbins.co.kr",
+        category: "디저트"
+      },
+      "롯데리아": {
+        logo: "https://www.lotteeatz.com/_next/static/media/logo.4f4f4a71.svg",
+        android: "https://play.google.com/store/apps/details?id=kr.co.lotteeatz",
+        ios: "https://apps.apple.com/kr/app/lotte-eatz/id1510268313",
+        web: "https://www.lotteeatz.com",
+        category: "햄버거"
+      },
+      "맥도날드": {
+        logo: "https://mcdonalds.co.kr/kor/images/common/logo.png",
+        android: "https://play.google.com/store/apps/details?id=kr.co.mcdonalds",
+        ios: "https://apps.apple.com/kr/app/mcdonalds/id1114009187",
+        web: "https://www.mcdonalds.co.kr",
+        category: "햄버거"
+      },
+      "도미노피자": {
+        logo: "https://cdn.dominos.co.kr/resources/pc/images/common/logo.png",
+        android: "https://play.google.com/store/apps/details?id=kr.co.dominos.android",
+        ios: "https://apps.apple.com/kr/app/id370107260",
+        web: "https://web.dominos.co.kr",
+        category: "피자"
+      },
+      "이삭토스트": {
+        logo: "https://www.isaac-toast.co.kr/common/images/logo.png",
+        android: "https://play.google.com/store/apps/details?id=kr.co.isaac.toast",
+        ios: "https://apps.apple.com/kr/app/id1668928282",
+        web: "https://www.isaac-toast.co.kr",
+        category: "토스트"
       }
-      // 다른 브랜드도 동일한 방식으로 추가
     };
 
     const categories = {
       "전체": "🍽",
       "즐겨찾기": "⭐",
-      "치킨": "🍗"
+      "치킨": "🍗",
+      "햄버거": "🍔",
+      "피자": "🍕",
+      "토스트": "🍞",
+      "떡볶이": "🌶️",
+      "중식": "🥡",
+      "디저트": "🍨"
     };
 
     let favorites = JSON.parse(localStorage.getItem("favorites") || "[]");
@@ -205,7 +278,6 @@
           </div>
         `;
         btn.onclick = () => {
-          const intentLink = `intent://details?id=${info.android}#Intent;scheme=market;package=com.android.vending;end`;
           const popup = window.open('', '_blank', 'width=360,height=500');
           popup.document.write(`
             <title>${brand} 주문</title>
@@ -215,7 +287,7 @@
               a { display: block; margin: 12px 0; text-decoration: none; color: white; background: #333; padding: 10px; border-radius: 8px; }
             </style>
             <h2>${brand} 주문 링크</h2>
-            <a href="${intentLink}">📲 Android 앱 (Play 스토어 앱 열기)</a>
+            <a href="${info.android}" target="_blank">📲 Android 앱</a>
             <a href="${info.ios}" target="_blank">📱 iOS 앱</a>
             <a href="${info.web}" target="_blank">🌐 웹 주문</a>
           `);
