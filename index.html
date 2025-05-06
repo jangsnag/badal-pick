@@ -102,7 +102,7 @@
   </style>
 </head>
 <body>
-  <h1>📱 배달픽 0506 </h1>
+  <h1>📱 배달픽 </h1>
 
   <input type="text" id="searchInput" placeholder="브랜드명을 입력하세요..." />
 
@@ -118,31 +118,18 @@
     const data = {
       "교촌치킨": {
         logo: "https://upload.wikimedia.org/wikipedia/ko/thumb/2/29/Kyochon_Logo.svg/256px-Kyochon_Logo.svg.png",
-        android: "intent://details?id=com.order.kyochonchicken#Intent;scheme=market;package=com.android.vending;end",
+        android: "com.order.kyochonchicken",
         ios: "https://apps.apple.com/app/id12345678",
         web: "https://order.kyochon.com",
         category: "치킨"
-      },
-      "BHC": {
-        logo: "https://www.bhc.co.kr/images/common/logo.png",
-        android: "intent://details?id=com.bhc.app#Intent;scheme=market;package=com.android.vending;end",
-        ios: "https://apps.apple.com/app/id87654321",
-        web: "https://www.bhc.co.kr/order",
-        category: "치킨"
       }
-      // 다른 브랜드도 같은 형식으로 추가 가능
+      // 다른 브랜드도 동일한 방식으로 추가
     };
 
     const categories = {
       "전체": "🍽",
       "즐겨찾기": "⭐",
-      "치킨": "🍗",
-      "햄버거": "🍔",
-      "피자": "🍕",
-      "토스트": "🍞",
-      "떡볶이": "🌶️",
-      "중식": "🥡",
-      "디저트": "🍨"
+      "치킨": "🍗"
     };
 
     let favorites = JSON.parse(localStorage.getItem("favorites") || "[]");
@@ -218,6 +205,7 @@
           </div>
         `;
         btn.onclick = () => {
+          const intentLink = `intent://details?id=${info.android}#Intent;scheme=market;package=com.android.vending;end`;
           const popup = window.open('', '_blank', 'width=360,height=500');
           popup.document.write(`
             <title>${brand} 주문</title>
@@ -227,7 +215,7 @@
               a { display: block; margin: 12px 0; text-decoration: none; color: white; background: #333; padding: 10px; border-radius: 8px; }
             </style>
             <h2>${brand} 주문 링크</h2>
-            <a href="${info.android}">📲 Android 앱</a>
+            <a href="${intentLink}">📲 Android 앱 (Play 스토어 앱 열기)</a>
             <a href="${info.ios}" target="_blank">📱 iOS 앱</a>
             <a href="${info.web}" target="_blank">🌐 웹 주문</a>
           `);
